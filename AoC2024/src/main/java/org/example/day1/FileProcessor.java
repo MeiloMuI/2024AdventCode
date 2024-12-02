@@ -1,4 +1,4 @@
-package org.hxy;
+package org.example.day1;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
