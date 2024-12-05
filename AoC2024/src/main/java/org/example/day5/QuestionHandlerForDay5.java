@@ -31,12 +31,30 @@ public class QuestionHandlerForDay5 {
         int result = 0;
 
         for(List<Integer> list: data){
-            if(!checkValidityOfData(map, list)){
-                // Get the mid
+            if(!getIncorrectData(map, list)){
+
                 result += getMid(list);
             }
         }
         return result;
+    }
+
+    public boolean getIncorrectData(Map<Integer, HashSet<Integer>> rules, List<Integer> oneRowData){
+        boolean flag = true;
+        for(int i = 0; i < oneRowData.size(); i++){
+            HashSet<Integer> duplicated = rules.get(oneRowData.get(i));
+            if(duplicated == null) continue;
+            for(int j = 0; j < i; j++){
+                if(duplicated.contains(oneRowData.get(j))){
+                    flag = false;
+                    int num = oneRowData.get(i);
+                    oneRowData.remove(i);
+                    oneRowData.add(j, num);
+                    break;
+                }
+            }
+        }
+        return flag;
     }
 
     public boolean checkValidityOfData(Map<Integer, HashSet<Integer>> map, List<Integer> oneRowData){
