@@ -3,11 +3,12 @@ package org.example;
 import org.example.day3.QuestionHandlerForDay3;
 import org.example.day4.QuestionHandlerForDay4;
 import org.example.day5.QuestionHandlerForDay5;
+import org.example.day6.QuestionHandlerForDay6;
 
 public class Main {
     public static void main(String[] args) {
-        QuestionHandlerForDay5 questionHandlerForDay5 = new QuestionHandlerForDay5();
-        System.out.println(questionHandlerForDay5.getAnswerOfPart1("data/day5/ruleOfPart1.txt", "data/day5/dataOfPart1.txt"));
-        System.out.println(questionHandlerForDay5.getAnswerOfPart2("data/day5/ruleOfPart2.txt", "data/day5/dataOfPart2.txt"));
+        QuestionHandlerForDay6 questionHandlerForDay6 = new QuestionHandlerForDay6();
+        System.out.println(questionHandlerForDay6.getAnswerOfPart1("data/day6/part1.txt"));
+        System.out.println(questionHandlerForDay6.getAnswerOfPart2("data/day6/part2.txt"));
     }
 }
