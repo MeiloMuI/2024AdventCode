@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) {
         QuestionHandlerForDay7 questionHandler = new QuestionHandlerForDay7();
         System.out.println(questionHandler.getAnswerOfPart1("data/day7/part1.txt"));
-        System.out.println(questionHandler.getAnswerOfPart1("data/day7/test1.txt"));
+        System.out.println(questionHandler.getAnswerOfPart2("data/day7/part2.txt"));
 //        System.out.println(questionHandler.getAnswerOfPart2("data/day6/part2.txt"));
     }
 }
