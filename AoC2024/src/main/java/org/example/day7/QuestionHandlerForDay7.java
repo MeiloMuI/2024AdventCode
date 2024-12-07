@@ -1,4 +1,6 @@
 package org.example.day7;
+import org.example.util.FileProcessor;
+
 import java.math.BigInteger;
 import java.util.*;
 public class QuestionHandlerForDay7 {
@@ -8,26 +10,36 @@ public class QuestionHandlerForDay7 {
         this.fileProcessor = new FileProcessor();
     }
 
-    public long getAnswerOfPart1(String filePath){
-        Map<Long, List<Long>> data = fileProcessor.readFile(filePath);
-        long result = 0;
-        for(Map.Entry<Long, List<Long>> entry: data.entrySet()){
-            List<Long> list = entry.getValue();
-            if(checkNumbersHaveValidResult(entry.getKey(), entry.getValue(), list.size() - 1)){
-                System.out.println(entry.getKey() + " : true");
-                result += entry.getKey();
+    public BigInteger getAnswerOfPart1(String filePath){
+        List<String> data = fileProcessor.readFile(filePath);
+        BigInteger sum = BigInteger.ZERO;
+        for(String line: data){
+            String[] arr = line.split(":");
+            BigInteger result = new BigInteger(arr[0]);
+            String[] operandStr = arr[1].trim().split(" ");
+            int[] operands = new int[operandStr.length];
+            for(int i = 0; i < operandStr.length; i++){
+                operands[i] = Integer.parseInt(operandStr[i]);
+            }
+            BigInteger count = BigInteger.valueOf(operands[0]);
+            boolean isValid = checkNumbersHaveValidResult(operands,1,count,result);
+            if(isValid){
+                sum = sum.add(result);
             }
         }
-        return result;
+        return sum;
     }
 
-    public boolean checkNumbersHaveValidResult(long target, List<Long> list, int index){
-        if(index == -1){
-            return target == 0;
+    public boolean checkNumbersHaveValidResult(int[] operands, int index, BigInteger count, BigInteger result){
+        if(index == operands.length){
+            return count.equals(result);
         }
-        if(target <= 0) return false;
-        return checkNumbersHaveValidResult(target - list.get(index), list, index-1)
-                || (target % list.get(index) == 0 && checkNumbersHaveValidResult(target/list.get(index), list, index-1));
+        BigInteger sum1 = count.add(BigInteger.valueOf(operands[index]));
+        BigInteger sum2 = count.multiply(BigInteger.valueOf(operands[index]));
+        index++;
+        boolean check1 = checkNumbersHaveValidResult(operands, index, sum1, result);
+        boolean check2 = checkNumbersHaveValidResult(operands, index, sum2, result);
+        return check1 || check2;
     }
 
 }
