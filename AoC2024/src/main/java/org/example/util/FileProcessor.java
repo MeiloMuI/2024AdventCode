@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileProcessor {
+public class FileProcessor implements org.example.FileProcessor {
     public List<String> readFile(String filePath){
         List<String> result = new ArrayList<>();
         try(BufferedReader br = new BufferedReader(new FileReader(filePath))){
