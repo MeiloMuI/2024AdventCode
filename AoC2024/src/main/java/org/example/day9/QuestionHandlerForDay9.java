@@ -3,6 +3,7 @@ package org.example.day9;
 import org.example.util.FileProcessor;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionHandlerForDay9 {
@@ -12,10 +13,10 @@ public class QuestionHandlerForDay9 {
         this.fileProcessor = new FileProcessor();
     }
 
-    public StringBuilder parseData(List<String> data){
+    public List<String> parseData(List<String> data){
         String numbers = data.get(0);
         int n = numbers.length();
-        StringBuilder sb = new StringBuilder();
+        List<String> result = new ArrayList<>();
         for(int i = 0; i < n; i++){
             int space = numbers.charAt(i) - '0';
             int index = -1;
@@ -25,49 +26,49 @@ public class QuestionHandlerForDay9 {
             }
             while(space > 0){
                 if(index == -1){
-                    sb.append('.');
+                    result.add(".");
                 } else {
-                    sb.append(index);
+                    result.add(index+"");
                 }
                 space--;
             }
         }
-        return sb;
+        return result;
     }
 
     public BigInteger solvePart1(String filePath){
         List<String> data = fileProcessor.readFile(filePath);
-        StringBuilder sb = parseData(data);
-        int left = findMemoIndex(sb, 0);
-        int right = findDataIndex(sb, sb.length()-1);
+        List<String> dataList = parseData(data);
+        int left = findMemoIndex(dataList, 0);
+        int right = findDataIndex(dataList, dataList.size()-1);
         while(left < right){
-            sb.setCharAt(left, sb.charAt(right));
-            sb.setCharAt(right, '.');
-            left = findMemoIndex(sb, left+1);
-            right = findDataIndex(sb, right-1);
+            dataList.set(left, dataList.get(right));
+            dataList.set(right, ".");
+            left = findMemoIndex(dataList, left+1);
+            right = findDataIndex(dataList, right-1);
         }
 
-        int n = sb.length();
+        int n = dataList.size();
         // Get the result
         BigInteger result = BigInteger.ZERO;
         for(int i = 0; i < n; i++){
-            if(sb.charAt(i) == '.') break;
-            BigInteger value = BigInteger.valueOf(sb.charAt(i) - '0');
+            if(dataList.get(i).equals(".")) break;
+            BigInteger value = new BigInteger(dataList.get(i));
             value = value.multiply(BigInteger.valueOf(i));
             result = result.add(value);
         }
         return result;
     }
 
-    public int findMemoIndex(StringBuilder sb, int startIndex){
-        while(sb.charAt(startIndex) != '.'){
+    public int findMemoIndex(List<String> list, int startIndex){
+        while(!list.get(startIndex).equals(".")){
             startIndex++;
         }
         return startIndex;
     }
 
-    public int findDataIndex(StringBuilder sb, int startIndex){
-        while(sb.charAt(startIndex) == '.'){
+    public int findDataIndex(List<String> list, int startIndex){
+        while(list.get(startIndex).equals(".")){
             startIndex--;
         }
         return startIndex;
