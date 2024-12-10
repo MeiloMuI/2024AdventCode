@@ -13,7 +13,6 @@ public class Main {
     public static void main(String[] args) {
         QuestionHandlerForDay10 questionHandler = new QuestionHandlerForDay10();
         System.out.println(questionHandler.solvePart1("data/day10/part1.txt"));
-//        System.out.println(questionHandler.solvePart2("data/day9/part1.txt"));
-
+        System.out.println(questionHandler.solvePart2("data/day10/part2.txt"));
     }
 }

@@ -12,6 +12,7 @@ public class QuestionHandlerForDay10 implements QuestionHandler {
     FileProcessor fileProcessor;
     int[][] dir = new int[][]{{1,0}, {0, 1}, {-1, 0}, {0,-1}};
     int scoreOfTrailhead;
+    int ratingOfTrailhead;
 
     public QuestionHandlerForDay10() {
         this.fileProcessor = new FileProcessor();
@@ -38,7 +39,7 @@ public class QuestionHandlerForDay10 implements QuestionHandler {
         return result;
     }
 
-    public void dfs(List<String> data, char target, boolean[][] visited, int x, int y){
+    private void dfs(List<String> data, char target, boolean[][] visited, int x, int y){
         for(int i = 0; i < 4; i++){
             int nextX = x + dir[i][0];
             int nextY = y + dir[i][1];
@@ -47,16 +48,47 @@ public class QuestionHandlerForDay10 implements QuestionHandler {
                 if(target == '9'){
                     visited[nextX][nextY] = true;
                     scoreOfTrailhead++;
-                    continue;
+                } else {
+                    dfs(data, (char)(target+1),visited, nextX, nextY);
                 }
-                dfs(data, (char)(target+1),visited, nextX, nextY);
             }
         }
     }
 
     @Override
     public int solvePart2(String filePath) {
-        return 0;
+        List<String> data = fileProcessor.readFile(filePath);
+        int m = data.size();
+        int n = data.get(0).length();
+        int result = 0;
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                char c = data.get(i).charAt(j);
+                if(c == '0'){
+                    ratingOfTrailhead = 0;
+                    boolean[][] visited = new boolean[m][n];
+                    dfsForPart2(data, '1', i, j);
+                    result += ratingOfTrailhead;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private void dfsForPart2(List<String> data, char target, int x, int y){
+        for(int i = 0; i < 4; i++){
+            int nextX = x + dir[i][0];
+            int nextY = y + dir[i][1];
+            if(nextX < 0 || nextX >= data.size() || nextY < 0 || nextY >= data.get(0).length()) continue;
+            if(data.get(nextX).charAt(nextY) == target){
+                if(target == '9'){
+                    ratingOfTrailhead++;
+                } else {
+                    dfsForPart2(data, (char)(target+1), nextX, nextY);
+                }
+            }
+        }
     }
 
 }
