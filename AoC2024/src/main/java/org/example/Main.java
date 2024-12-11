@@ -13,7 +13,7 @@ import org.example.day9.QuestionHandlerForDay9;
 public class Main {
     public static void main(String[] args) {
         QuestionHandlerForDay11 questionHandler = new QuestionHandlerForDay11();
-        System.out.println(questionHandler.solvePart1("data/day11/part1.txt", 75));
-//        System.out.println(questionHandler.solvePart2("data/day11/part2.txt"));
+//        System.out.println(questionHandler.solvePart1("data/day11/part1.txt", 75));
+        System.out.println(questionHandler.solvePart2("data/day11/part1.txt", 75));
     }
 }
