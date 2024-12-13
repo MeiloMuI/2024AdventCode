@@ -93,61 +93,57 @@ public class QuestionHandlerForDay12 {
         int rows = region.length;
         int cols = region[0].length;
         int result = 0;
+        boolean isContinue = false;
         // top-down
         for(int i = 0; i < rows; i++){
             for(int j = 0; j < cols; j++){
                 //top
-                if(region[i][j]){
-                    if (i == 0 || !region[i - 1][j]) {
-                        result++;
-                        while(j < cols && region[i][j]){
-                            j++;
-                        }
-                    }
+                if(region[i][j] && (i == 0 || !region[i - 1][j])){
+                    if(!isContinue) result++;
+                    isContinue = true;
+                } else {
+                    isContinue = false;
                 }
             }
         }
+        isContinue = false;
         for(int i = 0; i < rows; i++){
             for(int j = 0; j < cols; j++){
                 //top
-                if(region[i][j]){
+                if(region[i][j] && (i == rows - 1 || !region[i + 1][j])){
                     //down
-                    if (i == rows - 1 || !region[i + 1][j]) {
-                        result++;
-                        while(j < cols && region[i][j]){
-                            j++;
-                        }
-                    }
+                    if(!isContinue) result ++;
+                    isContinue = true;
+                } else {
+                    isContinue = false;
                 }
             }
         }
+        isContinue = false;
         //left-right
         for(int j = 0; j < cols; j++){
             for(int i = 0; i < rows; i++){
                 //right
-                if(region[i][j]){
-                    if(j == cols - 1 || !region[i][j + 1]){
-                        result++;
-                        while(i < rows && region[i][j]){
-                            i++;
-                        }
-                    }
+                if(region[i][j] && (j == cols - 1 || !region[i][j + 1])){
+                    if(!isContinue) result++;
+                    isContinue = true;
+
+                } else {
+                    isContinue = false;
                 }
 
             }
         }
+        isContinue = false;
         for(int j = 0; j < cols; j++){
             for(int i = 0; i < rows; i++){
                 //left
-                if(region[i][j]){
-                    if(j == 0 || !region[i][j - 1]){
-                        result++;
-                        while(i < rows && region[i][j]){
-                            i++;
-                        }
-                    }
+                if(region[i][j] && (j == 0 || !region[i][j - 1])){
+                    if(!isContinue) result ++;
+                    isContinue = true;
+                } else {
+                    isContinue =false;
                 }
-
             }
         }
         return result;
