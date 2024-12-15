@@ -66,14 +66,29 @@ public class QuestionHandlerForDay13 {
     public int solvePart1(String filePath){
         List<String> data = fileProcessor.readFile(filePath);
         List<Machine> machines = parseData(data);
-        // Test
+        int result = 0;
         for(Machine machine: machines){
-            System.out.println("Button A:" + machine.getButtonA().getX());
-            System.out.println("Button B:" + machine.getButtonB().getY());
-            System.out.println("Prize: X" + machine.getPrize().prizeForX + " Y" + machine.getPrize().prizeForY);
-            System.out.println("-----------------");
+            Button buttonA = machine.getButtonA();
+            Button buttonB = machine.getButtonB();
+            Prize prize = machine.getPrize();
+            int det = buttonA.getX() * buttonB.getY() - buttonB.getX() * buttonA.getY();
+            int denoOfX = prize.getPrizeForX() * buttonB.getY() - prize.getPrizeForY() * buttonB.getX();
+            int denoOfY = buttonA.getX() * prize.getPrizeForY() - buttonA.getY() * prize.getPrizeForX();
+            if(det != 0){
+                // One solution
+                if(denoOfX % det == 0 && denoOfY % det == 0){
+                    result += buttonA.getTokenSpend() * denoOfX / det + buttonB.getTokenSpend() * denoOfY / det;
+                }
+            } else {
+                // Multiply solutions
+                if(buttonA.getX() / buttonB.getX() >= buttonA.getTokenSpend()){
+                    result += buttonA.getTokenSpend() * prize.getPrizeForX() / buttonA.getX();
+                } else {
+                    result += buttonB.getTokenSpend() * prize.getPrizeForX() / buttonB.getX();
+                }
+            }
         }
-        return 0;
+        return result;
     }
 
     public int solvePart2(String filePath){
