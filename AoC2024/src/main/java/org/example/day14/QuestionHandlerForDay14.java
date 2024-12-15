@@ -1,6 +1,7 @@
 package org.example.day14;
 
 import org.example.Main;
+import org.example.day13.Prize;
 import org.example.util.FileProcessor;
 
 import java.util.List;
@@ -58,8 +59,28 @@ public class QuestionHandlerForDay14 {
     }
 
     public int solvePart2(String filePath){
-
+        List<Robot> robots = fileProcessor.getRobots(filePath);
+        printPicturesOfRobots(robots, 0);
         return 0;
+    }
+
+    public void printPicturesOfRobots(List<Robot> robots, int num){
+        boolean[][] arr = new boolean[tall][wide];
+        for(Robot robot: robots) {
+            // set the existing robots into arr
+            arr[robot.getY()][robot.getX()] = true;
+        }
+        System.out.println("------- This is the " + num + " time -----------");
+        for(int i = 0; i < arr.length;i++){
+            for(int j = 0; j < arr[0].length; j++){
+                if(arr[i][j]){
+                    System.out.print('@');
+                } else {
+                    System.out.print('.');
+                }
+            }
+            System.out.print("\n");
+        }
     }
 
 }
