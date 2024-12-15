@@ -12,7 +12,7 @@ public class QuestionHandlerForDay13 {
         this.fileProcessor = new FileProcessor();
     }
 
-    private List<Machine> parseData(List<String> data){
+    private List<Machine> parseData(List<String> data, String addition){
         List<Machine> lists = new ArrayList<>();
         data.add(""); // Make the data and be groups of four
         int n = data.size();
@@ -25,7 +25,7 @@ public class QuestionHandlerForDay13 {
             Button buttonB = generateButtonFromString(data.get(i));
             i++;
             // Prize
-            Prize prize = generatePrizeFromString(data.get(i));
+            Prize prize = generatePrizeFromString(data.get(i), addition);
             i++;
             // Skip one line
             Machine machine = new Machine(prize, buttonA, buttonB);
@@ -35,13 +35,13 @@ public class QuestionHandlerForDay13 {
         return lists;
     }
 
-    private Prize generatePrizeFromString(String s){
+    private Prize generatePrizeFromString(String s, String addition){
         String[] arr = s.split(":");
         String[] prizes = arr[1].split(",");
-        int[] valueOfPrizes = new int[2];
+        long[] valueOfPrizes = new long[2];
         for(int i = 0; i < prizes.length; i++){
             String[] temp = prizes[i].split("=");
-            valueOfPrizes[i] = Integer.parseInt(temp[1]);
+            valueOfPrizes[i] = Long.parseLong(temp[1]) + Long.parseLong(addition);
         }
         return new Prize(valueOfPrizes[0], valueOfPrizes[1]);
     }
@@ -63,17 +63,17 @@ public class QuestionHandlerForDay13 {
         return new Button(values[0], values[1], numOfTokens);
     }
 
-    public int solvePart1(String filePath){
+    public long solvePart1(String filePath){
         List<String> data = fileProcessor.readFile(filePath);
-        List<Machine> machines = parseData(data);
-        int result = 0;
+        List<Machine> machines = parseData(data, "0");
+        long result = 0;
         for(Machine machine: machines){
             Button buttonA = machine.getButtonA();
             Button buttonB = machine.getButtonB();
             Prize prize = machine.getPrize();
             int det = buttonA.getX() * buttonB.getY() - buttonB.getX() * buttonA.getY();
-            int denoOfX = prize.getPrizeForX() * buttonB.getY() - prize.getPrizeForY() * buttonB.getX();
-            int denoOfY = buttonA.getX() * prize.getPrizeForY() - buttonA.getY() * prize.getPrizeForX();
+            long denoOfX = prize.getPrizeForX() * buttonB.getY() - prize.getPrizeForY() * buttonB.getX();
+            long denoOfY = buttonA.getX() * prize.getPrizeForY() - buttonA.getY() * prize.getPrizeForX();
             if(det != 0){
                 // One solution
                 if(denoOfX % det == 0 && denoOfY % det == 0){
@@ -91,8 +91,31 @@ public class QuestionHandlerForDay13 {
         return result;
     }
 
-    public int solvePart2(String filePath){
-
-        return 0;
+    public long solvePart2(String filePath){
+        List<String> data = fileProcessor.readFile(filePath);
+        List<Machine> machines = parseData(data, "10000000000000");
+        long result = 0;
+        for(Machine machine: machines){
+            Button buttonA = machine.getButtonA();
+            Button buttonB = machine.getButtonB();
+            Prize prize = machine.getPrize();
+            int det = buttonA.getX() * buttonB.getY() - buttonB.getX() * buttonA.getY();
+            long denoOfX = prize.getPrizeForX() * buttonB.getY() - prize.getPrizeForY() * buttonB.getX();
+            long denoOfY = buttonA.getX() * prize.getPrizeForY() - buttonA.getY() * prize.getPrizeForX();
+            if(det != 0){
+                // One solution
+                if(denoOfX % det == 0 && denoOfY % det == 0){
+                    result += buttonA.getTokenSpend() * denoOfX / det + buttonB.getTokenSpend() * denoOfY / det;
+                }
+            } else {
+                // Multiply solutions
+                if(buttonA.getX() / buttonB.getX() >= buttonA.getTokenSpend()){
+                    result += buttonA.getTokenSpend() * prize.getPrizeForX() / buttonA.getX();
+                } else {
+                    result += buttonB.getTokenSpend() * prize.getPrizeForX() / buttonB.getX();
+                }
+            }
+        }
+        return result;
     }
 }

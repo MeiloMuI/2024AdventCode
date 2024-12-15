@@ -1,27 +1,27 @@
 package org.example.day13;
 
 public class Prize {
-    int prizeForX;
-    int prizeForY;
+    long prizeForX;
+    long prizeForY;
 
-    public Prize(int prizeForX, int prizeForY) {
+    public Prize(long prizeForX, long prizeForY) {
         this.prizeForX = prizeForX;
         this.prizeForY = prizeForY;
     }
 
-    public int getPrizeForX() {
+    public long getPrizeForX() {
         return prizeForX;
     }
 
-    public void setPrizeForX(int prizeForX) {
+    public void setPrizeForX(long prizeForX) {
         this.prizeForX = prizeForX;
     }
 
-    public int getPrizeForY() {
+    public long getPrizeForY() {
         return prizeForY;
     }
 
-    public void setPrizeForY(int prizeForY) {
+    public void setPrizeForY(long prizeForY) {
         this.prizeForY = prizeForY;
     }
 }

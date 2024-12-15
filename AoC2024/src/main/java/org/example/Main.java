@@ -16,6 +16,6 @@ public class Main {
     public static void main(String[] args) {
         QuestionHandlerForDay13 questionHandler = new QuestionHandlerForDay13();
         System.out.println(questionHandler.solvePart1("data/day13/part1.txt"));
-//        System.out.println(questionHandler.solvePart2("data/day12/part1.txt"));
+        System.out.println(questionHandler.solvePart2("data/day13/part1.txt"));
     }
 }
