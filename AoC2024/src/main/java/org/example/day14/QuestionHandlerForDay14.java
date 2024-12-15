@@ -60,8 +60,40 @@ public class QuestionHandlerForDay14 {
 
     public int solvePart2(String filePath){
         List<Robot> robots = fileProcessor.getRobots(filePath);
-        printPicturesOfRobots(robots, 0);
+        for(int i = 0; i < 8000; i++){
+            // 1. Change the status of robots
+            changeStatusOfRobots(robots);
+            // 2. visualization of data
+            if(numberOfRobotsInMid(robots) > 50){
+                printPicturesOfRobots(robots, i);
+            }
+        }
         return 0;
+    }
+
+    private int numberOfRobotsInMid(List<Robot> robots){
+        int result = 0;
+        int limit = 10;
+        int boardTop = tall / 2 - limit;
+        int boardBot = tall / 2 + limit;
+        int boardLeft = wide / 2 - limit;
+        int boardRight = wide / 2 + limit;
+        for(Robot robot: robots){
+            if(robot.getX() >= boardLeft && robot.getX() <= boardRight &&
+                robot.getY() >= boardTop && robot.getY() <= boardBot){
+                result++;
+            }
+        }
+        return result;
+    }
+
+    private void changeStatusOfRobots(List<Robot> robots){
+        for(Robot robot: robots){
+            int finalX = getFinalPosition(robot.getX(), robot.getVelocityOfX(), wide);
+            int finalY = getFinalPosition(robot.getY(), robot.getVelocityOfY(), tall);
+            robot.setX(finalX);
+            robot.setY(finalY);
+        }
     }
 
     public void printPicturesOfRobots(List<Robot> robots, int num){
