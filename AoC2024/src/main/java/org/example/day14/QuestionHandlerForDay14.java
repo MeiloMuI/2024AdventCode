@@ -11,13 +11,12 @@ public class QuestionHandlerForDay14 {
     int tall;
     public QuestionHandlerForDay14() {
         this.fileProcessor = new FileProcessorForDay14();
-        this.wide = 11;
-        this.tall = 7;
+        this.wide = 101;
+        this.tall = 103;
     }
 
     public int solvePart1(String filePath){
         List<Robot> robots = fileProcessor.getRobots(filePath);
-        int size = robots.size();
         int leftTop = 0;
         int rightTop = 0;
         int botLeft = 0;
