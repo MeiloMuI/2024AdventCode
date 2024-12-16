@@ -148,11 +148,16 @@ public class QuestionHandlerForDay15 {
             return;
         } else {
             // Push box
-            pushBoxPart2(board, nextX, nextY, posX, posY);
+            if(posY == 0){
+                pushBoxTopDown(board, nextX, nextY, posX, posY);
+            } else {
+                pushBoxLeftRight(board, nextX, nextY, posX, posY);
+            }
+
         }
     }
 
-    public void pushBoxPart2(GameEntity[][] board, int startX, int startY, int toX, int toY){
+    public void pushBoxTopDown(GameEntity[][] board, int startX, int startY, int toX, int toY){
 
         Queue<GameEntity> q = new LinkedList<>();
         Deque<GameEntity> deque = new LinkedList<>();
@@ -175,24 +180,9 @@ public class QuestionHandlerForDay15 {
                 canBePushed = false;
                 break;
             }
-
-            // toX == 0, left right ; toY == 0 up down
-            if (toX == 0){
-                if(toY == -1){
-                    if(!((Box)next).isLeftPart()){
-                        q.add(next);
-                        q.add(board[x][y-1]);
-                    }
-                } else if (toY == 1){
-                    if(((Box)next).isLeftPart()){
-                        q.add(next);
-                        q.add(board[x][y+1]);
-                    }
-                }
-            } else if (toY == 0 && ((Box)next).isLeftPart()){
+            if (((Box)next).isLeftPart()){
                 q.add(next);
                 q.add(board[x][y + 1]);
-
             }
         }
 
@@ -202,6 +192,36 @@ public class QuestionHandlerForDay15 {
                 Box box = (Box)deque.pollLast();
                 updateLocationOfBox(board, box, toX, toY);
             }
+            updateLocationOfPlayer(board, startX, startY);
+        }
+    }
+
+    public void pushBoxLeftRight(GameEntity[][] board, int startX, int startY, int toX, int toY){
+
+        int x = startX + toX;
+        int y = startY + toY;
+        boolean canBePushed = true;
+
+        while(x >= 0 && x < board.length && y >= 0 && y < board[0].length){
+            if(board[x][y] == null){
+                break;
+            } else if (board[x][y].getClass() == Wall.class){
+                canBePushed = false;
+                break;
+            }
+            x += toX;
+            y += toY;
+        }
+
+        if(canBePushed){
+            // Push boxes
+            while(y != startY){
+                y -= toY;
+                Box box = (Box)board[startX][y];
+                updateLocationOfBox(board, box, toX, toY);
+
+            }
+            // changePlayer
             updateLocationOfPlayer(board, startX, startY);
         }
 
