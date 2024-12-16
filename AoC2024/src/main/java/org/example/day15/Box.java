@@ -1,27 +1,7 @@
 package org.example.day15;
 
-public class Box {
-    int x;
-    int y;
-
+public class Box extends GameEntity{
     public Box(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
+        super(x, y);
     }
 }
