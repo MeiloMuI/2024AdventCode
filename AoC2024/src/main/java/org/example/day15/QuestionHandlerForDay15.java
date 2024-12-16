@@ -103,8 +103,76 @@ public class QuestionHandlerForDay15 {
         board[x][y] = player;
     }
 
-    public int solvePart2(String filePath){
-
+    public int solvePart2(String boardFile, String commandFile){
+        GameEntity[][] board = fileProcessorForDay15.readLargeBoardFile(boardFile);
+        List<String> commands = fileProcessorForDay15.readMoveFile(commandFile);
+        this.player = fileProcessorForDay15.player;
+//        for(String s: commands){
+//            int len = s.length();
+//            for(int i = 0; i < len; i++){
+//                char currentCommand = s.charAt(i);
+//                int posX = 0;
+//                int posY = 0;
+//                switch (currentCommand){
+//                    case '<':
+//                        posY = -1;
+//                        break;
+//                    case '^':
+//                        posX = -1;
+//                        break;
+//                    case '>':
+//                        posY = 1;
+//                        break;
+//                    case 'v':
+//                        posX = 1;
+//                        break;
+//                    default:
+//                }
+//                // get result of movement
+//                getResultOfMovementPart2(board, posX, posY);
+//            }
+//        }
+//        // Get the result
+//        return getResult(board);
+        printBoard(board);
         return 0;
+    }
+
+    public void printBoard(GameEntity[][] board){
+        int m = board.length;
+        int n = board[0].length;
+
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                GameEntity e = board[i][j];
+                if(e == null){
+                    System.out.print('.');
+                } else if (e.getClass() == Box.class){
+                    if (((Box) e).isLeftPart()){
+                        System.out.print('[');
+                    } else {
+                        System.out.print(']');
+                    }
+                } else if (e.getClass() == Wall.class){
+                    System.out.print('#');
+                } else {
+                    System.out.print('@');
+                }
+            }
+            System.out.print("\n");
+        }
+    }
+
+    public void getResultOfMovementPart2(GameEntity[][] board, int posX, int posY){
+        int nextX = player.getX() + posX;
+        int nextY = player.getY() + posY;
+        if(board[nextX][nextY] == null){
+            updateLocationOfPlayer(board, nextX, nextY);
+        } else if (board[nextX][nextY].getClass() == Wall.class){
+            return;
+        } else {
+            // Push box
+            pushBox(board, nextX, nextY, posX, posY);
+        }
     }
 }
