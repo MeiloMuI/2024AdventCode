@@ -1,6 +1,6 @@
 package org.example.day15;
 
-import java.util.List;
+import java.util.*;
 
 public class QuestionHandlerForDay15 {
     FileProcessorForDay15 fileProcessorForDay15;
@@ -96,46 +96,125 @@ public class QuestionHandlerForDay15 {
         }
     }
 
-    public void updateLocationOfPlayer(GameEntity[][] board, int x, int y){
+    public void updateLocationOfPlayer(GameEntity[][] board, int nextX, int nextY){
         board[player.getX()][player.getY()] = null;
-        player.setX(x);
-        player.setY(y);
-        board[x][y] = player;
+        player.setX(nextX);
+        player.setY(nextY);
+        board[nextX][nextY] = player;
     }
 
     public int solvePart2(String boardFile, String commandFile){
         GameEntity[][] board = fileProcessorForDay15.readLargeBoardFile(boardFile);
         List<String> commands = fileProcessorForDay15.readMoveFile(commandFile);
         this.player = fileProcessorForDay15.player;
-//        for(String s: commands){
-//            int len = s.length();
-//            for(int i = 0; i < len; i++){
-//                char currentCommand = s.charAt(i);
-//                int posX = 0;
-//                int posY = 0;
-//                switch (currentCommand){
-//                    case '<':
-//                        posY = -1;
-//                        break;
-//                    case '^':
-//                        posX = -1;
-//                        break;
-//                    case '>':
-//                        posY = 1;
-//                        break;
-//                    case 'v':
-//                        posX = 1;
-//                        break;
-//                    default:
-//                }
-//                // get result of movement
-//                getResultOfMovementPart2(board, posX, posY);
-//            }
-//        }
-//        // Get the result
-//        return getResult(board);
-        printBoard(board);
-        return 0;
+        for(String s: commands){
+            int len = s.length();
+            for(int i = 0; i < len; i++){
+                char currentCommand = s.charAt(i);
+                System.out.println(currentCommand  +" ----------------");
+
+                int posX = 0;
+                int posY = 0;
+                switch (currentCommand){
+                    case '<':
+                        posY = -1;
+                        break;
+                    case '^':
+                        posX = -1;
+                        break;
+                    case '>':
+                        posY = 1;
+                        break;
+                    case 'v':
+                        posX = 1;
+                        break;
+                    default:
+                }
+                // get result of movement
+                getResultOfMovementPart2(board, posX, posY);
+                printBoard(board);
+            }
+        }
+        // Get the result
+        return getResultPart2(board);
+    }
+
+    public void getResultOfMovementPart2(GameEntity[][] board, int posX, int posY){
+        int nextX = player.getX() + posX;
+        int nextY = player.getY() + posY;
+        if(board[nextX][nextY] == null){
+            updateLocationOfPlayer(board, nextX, nextY);
+        } else if (board[nextX][nextY].getClass() == Wall.class){
+            return;
+        } else {
+            // Push box
+            pushBoxPart2(board, nextX, nextY, posX, posY);
+        }
+    }
+
+    public void pushBoxPart2(GameEntity[][] board, int startX, int startY, int toX, int toY){
+
+        Queue<GameEntity> q = new LinkedList<>();
+        Deque<GameEntity> deque = new LinkedList<>();
+        q.add(board[startX][startY]);
+        if(((Box)(board[startX][startY])).isLeftPart()){
+            q.add(board[startX][startY + 1]);
+        } else {
+            q.add(board[startX][startY - 1]);
+        }
+        boolean canBePushed = true;
+        while(!q.isEmpty()){
+            GameEntity box = q.poll();
+            deque.addLast(box);
+            int x = box.getX() + toX;
+            int y = box.getY() + toY;
+            GameEntity next = board[x][y];
+            if(next == null){
+                continue;
+            } else if (next.getClass() == Wall.class){
+                canBePushed = false;
+                break;
+            }
+
+            // toX == 0, left right ; toY == 0 up down
+            if (toX == 0){
+                if(toY == -1){
+                    if(!((Box)next).isLeftPart()){
+                        q.add(next);
+                        q.add(board[x][y-1]);
+                    }
+                } else if (toY == 1){
+                    if(((Box)next).isLeftPart()){
+                        q.add(next);
+                        q.add(board[x][y+1]);
+                    }
+                }
+            } else if (toY == 0 && ((Box)next).isLeftPart()){
+                q.add(next);
+                q.add(board[x][y + 1]);
+
+            }
+        }
+
+        if(canBePushed){
+            // Change board
+            while(!deque.isEmpty()){
+                Box box = (Box)deque.pollLast();
+                updateLocationOfBox(board, box, toX, toY);
+            }
+            updateLocationOfPlayer(board, startX, startY);
+        }
+
+    }
+
+    private void updateLocationOfBox(GameEntity[][] board, Box box, int toX, int toY){
+        int nextX = box.getX()+toX;
+        int nextY = box.getY()+toY;
+        System.out.println(nextX + " " + nextY + " number----");
+        board[box.getX()][box.getY()] = null;
+        board[nextX][nextY] = box;
+        box.setX(nextX);
+        box.setY(nextY);
     }
 
     public void printBoard(GameEntity[][] board){
@@ -163,16 +242,19 @@ public class QuestionHandlerForDay15 {
         }
     }
 
-    public void getResultOfMovementPart2(GameEntity[][] board, int posX, int posY){
-        int nextX = player.getX() + posX;
-        int nextY = player.getY() + posY;
-        if(board[nextX][nextY] == null){
-            updateLocationOfPlayer(board, nextX, nextY);
-        } else if (board[nextX][nextY].getClass() == Wall.class){
-            return;
-        } else {
-            // Push box
-            pushBox(board, nextX, nextY, posX, posY);
+    public int getResultPart2(GameEntity[][] board){
+        int result = 0;
+        int m = board.length;;
+        int n = board[0].length;
+
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                if(board[i][j] != null && board[i][j].getClass() == Box.class && ((Box)board[i][j]).isLeftPart()){
+                    result += 100 * i + j;
+                }
+            }
         }
+        return result;
     }
+
 }
