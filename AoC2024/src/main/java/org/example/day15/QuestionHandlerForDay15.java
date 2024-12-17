@@ -105,6 +105,7 @@ public class QuestionHandlerForDay15 {
 
     public long solvePart2(String boardFile, String commandFile){
         GameEntity[][] board = fileProcessorForDay15.readLargeBoardFile(boardFile);
+//        printBoard(board);
         List<String> commands = fileProcessorForDay15.readMoveFile(commandFile);
         this.player = fileProcessorForDay15.player;
         for(String s: commands){
@@ -136,7 +137,7 @@ public class QuestionHandlerForDay15 {
             }
         }
         // Get the result
-        printBoard(board);
+//        printBoard(board);
         return getResultPart2(board);
     }
 
@@ -154,7 +155,7 @@ public class QuestionHandlerForDay15 {
             } else {
                 pushBoxLeftRight(board, nextX, nextY, posX, posY);
             }
-
+//            printBoard(board);
         }
     }
 
@@ -162,11 +163,15 @@ public class QuestionHandlerForDay15 {
 
         Queue<GameEntity> q = new LinkedList<>();
         Deque<GameEntity> deque = new LinkedList<>();
+        HashSet<GameEntity> set = new HashSet<>();
         q.add(board[startX][startY]);
+        set.add(board[startX][startY]);
         if(((Box)(board[startX][startY])).isLeftPart()){
             q.add(board[startX][startY + 1]);
+            set.add(board[startX][startY + 1]);
         } else {
             q.add(board[startX][startY - 1]);
+            set.add(board[startX][startY - 1]);
         }
         boolean canBePushed = true;
         while(!q.isEmpty()){
@@ -182,16 +187,15 @@ public class QuestionHandlerForDay15 {
                 break;
             }
             // Issue here
-
-            if(((Box)next).isLeftPart() && ((Box)box).isLeftPart()){
+            if(set.add(next)){
                 q.add(next);
-                q.add(board[x][y + 1]);
-            } else if (((Box)next).isLeftPart() && !((Box)box).isLeftPart()){
-                q.add(next);
-                q.add(board[x][y + 1]);
-            } else if (((Box)box).isLeftPart() && !((Box)next).isLeftPart()){
-                q.add(next);
-                q.add(board[x][y - 1]);
+                if(((Box)next).isLeftPart()){
+                    q.add(board[x][y + 1]);
+                    set.add(board[x][y + 1]);
+                } else {
+                    q.add(board[x][y - 1]);
+                    set.add(board[x][y - 1]);
+                }
             }
         }
 
@@ -228,7 +232,6 @@ public class QuestionHandlerForDay15 {
                 y -= toY;
                 Box box = (Box)board[startX][y];
                 updateLocationOfBox(board, box, toX, toY);
-
             }
             // changePlayer
             updateLocationOfPlayer(board, startX, startY);

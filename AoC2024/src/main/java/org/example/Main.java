@@ -21,5 +21,6 @@ public class Main {
 //        System.out.println(questionHandler.solvePart2("data/day14/part1.txt"));
 //        System.out.println(questionHandler.solvePart1("data/day15/board.txt", "data/day15/move.txt"));
         System.out.println(questionHandler.solvePart2("data/day15/board.txt", "data/day15/move.txt"));
+//        System.out.println(questionHandler.solvePart2("data/day15/exampleBoard.txt", "data/day15/exampleMove.txt"));
     }
 }
