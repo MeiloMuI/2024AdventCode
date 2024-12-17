@@ -103,7 +103,7 @@ public class QuestionHandlerForDay15 {
         board[nextX][nextY] = player;
     }
 
-    public int solvePart2(String boardFile, String commandFile){
+    public long solvePart2(String boardFile, String commandFile){
         GameEntity[][] board = fileProcessorForDay15.readLargeBoardFile(boardFile);
         List<String> commands = fileProcessorForDay15.readMoveFile(commandFile);
         this.player = fileProcessorForDay15.player;
@@ -111,7 +111,7 @@ public class QuestionHandlerForDay15 {
             int len = s.length();
             for(int i = 0; i < len; i++){
                 char currentCommand = s.charAt(i);
-                System.out.println(currentCommand  +" ----------------");
+//                System.out.println(currentCommand  +" ----------------");
 
                 int posX = 0;
                 int posY = 0;
@@ -132,10 +132,11 @@ public class QuestionHandlerForDay15 {
                 }
                 // get result of movement
                 getResultOfMovementPart2(board, posX, posY);
-                printBoard(board);
+//                printBoard(board);
             }
         }
         // Get the result
+        printBoard(board);
         return getResultPart2(board);
     }
 
@@ -180,9 +181,17 @@ public class QuestionHandlerForDay15 {
                 canBePushed = false;
                 break;
             }
-            if (((Box)next).isLeftPart()){
+            // Issue here
+
+            if(((Box)next).isLeftPart() && ((Box)box).isLeftPart()){
                 q.add(next);
                 q.add(board[x][y + 1]);
+            } else if (((Box)next).isLeftPart() && !((Box)box).isLeftPart()){
+                q.add(next);
+                q.add(board[x][y + 1]);
+            } else if (((Box)box).isLeftPart() && !((Box)next).isLeftPart()){
+                q.add(next);
+                q.add(board[x][y - 1]);
             }
         }
 
@@ -230,7 +239,7 @@ public class QuestionHandlerForDay15 {
     private void updateLocationOfBox(GameEntity[][] board, Box box, int toX, int toY){
         int nextX = box.getX()+toX;
         int nextY = box.getY()+toY;
-        System.out.println(nextX + " " + nextY + " number----");
+//        System.out.println(nextX + " " + nextY + " number----");
         board[box.getX()][box.getY()] = null;
         board[nextX][nextY] = box;
         box.setX(nextX);
@@ -262,15 +271,15 @@ public class QuestionHandlerForDay15 {
         }
     }
 
-    public int getResultPart2(GameEntity[][] board){
-        int result = 0;
+    public long getResultPart2(GameEntity[][] board){
+        long result = 0;
         int m = board.length;;
         int n = board[0].length;
 
         for(int i = 0; i < m; i++){
             for(int j = 0; j < n; j++){
                 if(board[i][j] != null && board[i][j].getClass() == Box.class && ((Box)board[i][j]).isLeftPart()){
-                    result += 100 * i + j;
+                    result += 100l * i + j;
                 }
             }
         }
